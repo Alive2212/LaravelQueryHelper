@@ -6,7 +6,7 @@
  * Time: 4:04 AM
  */
 
-namespace App\Resources\Model;
+namespace Alive2212\LaravelQueryHelper;
 
 class QueryHelper
 {
