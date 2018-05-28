@@ -30,7 +30,7 @@ vendor/
 Via Composer
 
 ``` bash
-$ composer require Alive2212/LaravelQueryHelper
+$   composer require alive2212/laravel-query-helper
 ```
 
 ## Usage
