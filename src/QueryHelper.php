@@ -78,12 +78,10 @@ class QueryHelper
      * @param array $filters
      * @return Builder
      */
-    public function smartDeepFilter(Builder $model, array $filters): Builder
+    public function smartDeepFilter($model, array $filters)
     {
         $filters = $this->filterAdaptor($filters);
-//        $model = $this->addCondition($model, $filters);
         $model = $this->addWhereCondition($model, $filters);
-//        dd($model->toSql());
         return $model;
     }
 
@@ -122,6 +120,10 @@ class QueryHelper
         return $result;
     }
 
+    /**
+     * @param array $filter
+     * @return array
+     */
     public function getHierarchyFilterKey(array $filter): array
     {
         $filterKeyParams = $this->getFilterKey($filter);
@@ -137,7 +139,7 @@ class QueryHelper
                 [
                     $firstFilterKey,
                     $firstFilterOperator,
-                    $firstFilterValue,
+                    $firstFilterValue == null? null:$firstFilterValue,
                 ],
             ];
         }
@@ -168,7 +170,7 @@ class QueryHelper
      * @param int $index
      * @return Builder
      */
-    public function addWhereCondition(Builder $model, array $filters, $type = 'and', $index = 0): Builder
+    public function addWhereCondition($model, array $filters, $type = 'and', $index = 0)
     {
         // Get key and value
         $firstFilterKey = array_key_first($filters);
@@ -190,13 +192,28 @@ class QueryHelper
                 if ($type == "or" && $index > 0) {
                     $model = $model->orWhere([$firstFilterValue[$firstFilterInnerKey]]);
                 } else {
-                    $model = $model->where([$firstFilterValue[$firstFilterInnerKey]]);
+                    $whereCondition = $firstFilterValue[$firstFilterInnerKey];
+                    if (strtolower($whereCondition[2]) == "null") {
+                        if (
+                            strtolower($whereCondition[1]) == "is" ||
+                            $whereCondition[1] == "="
+                        ){
+                            $model = $model->whereNull($whereCondition[0]);
+                        } elseif(
+                            strtolower($whereCondition[1]) == "not" ||
+                            $whereCondition[1] == "<>" ||
+                            $whereCondition[1] == "!="
+                        ) {
+                            $model = $model->whereNotNull($whereCondition[0]);
+                        }
+                    }else{
+                        $model = $model->where([$whereCondition]);
+                    }
                 }
 
                 // Get Inner key and value
-                if (count($filters[$firstFilterKey])===1) {
+                if (count($filters[$firstFilterKey]) === 1) {
                     break;
-//                    return $model;
                 }
                 unset($filters[$firstFilterKey][$firstFilterInnerKey]);
                 return $this->addWhereCondition($model, $filters, $type, ++$index);
@@ -243,7 +260,7 @@ class QueryHelper
                     });
                 } else {
                     $model = $model->whereHas($firstFilterKey, function (Builder $builder) use ($firstFilterValue) {
-                        $builder = $this->addWhereCondition($builder, $firstFilterValue, 'or', 0);
+                        $builder = $this->addWhereCondition($builder, $firstFilterValue, 'and', 0);
                         return $builder;
                     });
                 }
@@ -255,40 +272,6 @@ class QueryHelper
             return $this->addWhereCondition($model, $filters, $type, ++$index);
         }
         return $model;
-
-//        foreach ($filters as $filterKey => $filtersValues) {
-//            if ($type == 'and') {
-//                if ($filterKey == $this->queryFilterTitle) {
-////                    dump('where(', $filtersValues,')');
-//                    $model = $model->where($filtersValues);
-//                } else {
-////                    dump('whereHas('.$filterKey.'){', $filtersValues,'}');
-//                    $model = $model->whereHas($filterKey, function (Builder $query) use ($model, $filtersValues) {
-//                        $query = $this->addWhereCondition($query, $filtersValues);
-//                    });
-//                }
-//            } elseif ($type == 'or') {
-//                $index = 0;
-//                foreach ($filtersValues as $filtersValue) {
-//                    if ($filterKey == $this->queryFilterTitle) {
-////                        dump('orWhere(', $filtersValue,')');
-//                        $model = $index == 0 ?
-//                            $model->where([$filtersValue]) :
-//                            $model->orWhere([$filtersValue]);
-//                    } else {
-//                        $model = $index == 0 ?
-//                            $model->whereHas($filterKey, function (Builder $query) use ($model, $filtersValues) {
-//                                $query = $this->addWhereCondition($query, $filtersValues, 'or');
-//                            }) :
-//                            $model->orWhereHas($filterKey, function (Builder $query) use ($model, $filtersValues) {
-//                                $query = $this->addWhereCondition($query, $filtersValues, 'or');
-//                            });
-//                    }
-//                    $index += 1;
-//                }
-//            }
-//        }
-//        return $model;
     }
 
     /**
@@ -301,7 +284,7 @@ class QueryHelper
 
     /**
      * @param $filterDelimiter
-     * @return QueryHelper
+     * @return $this
      */
     public function setFilterDelimiter($filterDelimiter): QueryHelper
     {
@@ -336,18 +319,9 @@ class QueryHelper
      * @param array $filter
      * @return string
      */
-    public function getFilterValue(array $filter): string
+    public function getFilterValue(array $filter): ?string
     {
-        return array_key_exists('value', $filter) ? $filter['value'] : $filter[2];
-    }
-
-    public function newSmartDeepFilter(Builder $model, array $filters, $level = 0): Builder
-    {
-        if ($level % 2 == $this->orWhereConditionLevel) {
-
-        } else {
-            dd('here');
-        }
-        return $model;
+        return array_key_exists('value', $filter) ? $filter['value'] :
+            $filter[2] == null ? "null":$filter[2];
     }
 }
