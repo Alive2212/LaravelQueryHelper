@@ -321,7 +321,7 @@ class QueryHelper
      */
     public function getFilterValue(array $filter): ?string
     {
-        return array_key_exists('value', $filter) ? $filter['value'] :
-            $filter[2] == null ? "null":$filter[2];
+        return (array_key_exists('value', $filter)) ? $filter['value'] :
+            ($filter[2] == null ? "null":$filter[2]);
     }
 }
