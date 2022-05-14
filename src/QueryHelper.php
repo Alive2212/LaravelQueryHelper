@@ -54,7 +54,7 @@ class QueryHelper
     {
         $result = $query;
         if ($param->count()) {
-            $query->orderBy($param[0], $param[1]);
+            return $query->orderBy($param[0], $param[1]);
         }
         return $result;
     }
@@ -139,7 +139,7 @@ class QueryHelper
                 [
                     $firstFilterKey,
                     $firstFilterOperator,
-                    $firstFilterValue == null? null:$firstFilterValue,
+                    $firstFilterValue == null ? null : $firstFilterValue,
                 ],
             ];
         }
@@ -197,16 +197,16 @@ class QueryHelper
                         if (
                             strtolower($whereCondition[1]) == "is" ||
                             $whereCondition[1] == "="
-                        ){
+                        ) {
                             $model = $model->whereNull($whereCondition[0]);
-                        } elseif(
+                        } elseif (
                             strtolower($whereCondition[1]) == "not" ||
                             $whereCondition[1] == "<>" ||
                             $whereCondition[1] == "!="
                         ) {
                             $model = $model->whereNotNull($whereCondition[0]);
                         }
-                    }else{
+                    } else {
                         $model = $model->where([$whereCondition]);
                     }
                 }
@@ -322,6 +322,6 @@ class QueryHelper
     public function getFilterValue(array $filter): ?string
     {
         return (array_key_exists('value', $filter)) ? $filter['value'] :
-            ($filter[2] == null ? "null":$filter[2]);
+            ($filter[2] == null ? "null" : $filter[2]);
     }
 }
