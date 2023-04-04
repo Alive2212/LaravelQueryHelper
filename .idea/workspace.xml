@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6ec5534c-4373-40bd-bf94-bfcbe2ff1e86" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/laravelqueryhelper.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/laravelqueryhelper.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/QueryHelper.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/QueryHelper.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -73,6 +71,8 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
@@ -94,6 +94,8 @@
       <workItem from="1579205425688" duration="646000" />
       <workItem from="1579207884793" duration="23000" />
       <workItem from="1652536359388" duration="71000" />
+      <workItem from="1680605416655" duration="62000" />
+      <workItem from="1680606817916" duration="27000" />
     </task>
     <servers />
   </component>

@@ -207,7 +207,16 @@ class QueryHelper
                             $model = $model->whereNotNull($whereCondition[0]);
                         }
                     } else {
-                        $model = $model->where([$whereCondition]);
+                        if (
+                            strtolower($whereCondition[1]) == "in"
+                        ) {
+                            $model = $model->whereIn(
+                                $whereCondition[0],
+                                json_decode($whereCondition[2], true)
+                            );
+                        } else {
+                            $model = $model->where([$whereCondition]);
+                        }
                     }
                 }
 
